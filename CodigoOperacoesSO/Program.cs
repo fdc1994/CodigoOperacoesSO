@@ -9,11 +9,12 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace CodigoOperacoesSO
 {
     internal class Program
     {
-
         static void Main(string[] args)
         {
             string dir = @"C:\Teste"; //Diretório
@@ -43,11 +44,12 @@ namespace CodigoOperacoesSO
             // IniciarProcesso();
             // TerminarProcesso();
             // ObterCulturaSistema();
-            // CriarNovoFicheiro();
-            // EscreverFicheiro();
-            // LerFicheiro();
-            //DeleteFile();
-            //MoverFicheiro();
+
+             CriarNovoFicheiro();
+             EscreverFicheiro();
+             LerFicheiro();
+            DeleteFile();
+            MoverFicheiro();
             //CopiarFicheiroNovaLocalização();
             //ApagarFicheiro();
             //VerificarSeFicheiroExiste();
@@ -56,16 +58,33 @@ namespace CodigoOperacoesSO
 
             VerificarSeOfficeEstaInstalado();
             VerificarHardware();
-            IniciarETerminarProcessoNotepad();
-            IniciarProcessoComPrivilegios();
-
+            //IniciarETerminarProcessoNotepad();
+            //IniciarProcessoComPrivilegios();
+            //ControlarProcessosACorrer();
 
 
             //Mantém a consola aberta
+            Console.WriteLine("O Programa terminou");
             Console.Read();
         }
 
-      
+        private static void ControlarProcessosACorrer()
+        {
+            Process[] processes = Process.GetProcessesByName("notepad");
+
+            foreach (Process process in processes)
+            {
+                // Send a key press to the process
+                process.StandardInput.Write("Hello, world!");
+
+                // Get the process's main window handle
+                IntPtr hwnd = process.MainWindowHandle;
+
+                // Set the process's main window to be the foreground window
+                ProgramHelpers.SetForegroundWindow(hwnd);
+            }
+        }
+
 
         private static void IniciarProcessoComPrivilegios()
         {
@@ -144,14 +163,28 @@ namespace CodigoOperacoesSO
         {
             string sourceFilePath = @"C:\Users\Utilizador\example.txt";
             string destinationFilePath = @"C:\Users\Utilizador\desktop\exampleCopy.txt";
-            File.Copy(sourceFilePath, destinationFilePath);
+            if(File.Exists(destinationFilePath))
+            {
+                Console.WriteLine("Erro a copiar: Já existe um ficheiro com esse nome");
+            } else
+            {
+                File.Copy(sourceFilePath, destinationFilePath);
+            }
         }
 
         private static void MoverFicheiro()
         {
             string sourceFilePath = @"C:\Users\Utilizador\example.txt";
             string destinationFilePath = @"C:\Users\Utilizador\desktop\example.txt";
-            File.Move(sourceFilePath, destinationFilePath);
+            if (File.Exists(destinationFilePath))
+            {
+                Console.WriteLine("Erro a mover: Já existe um ficheiro com esse nome");
+            }
+            else
+            {
+                File.Move(sourceFilePath, destinationFilePath);
+            }
+          
         }
 
         private static void DeleteFile()
@@ -163,30 +196,54 @@ namespace CodigoOperacoesSO
         private static void CriarNovoFicheiro()
         {
             string filePath = @"C:\Users\Utilizador\example.txt";
-            using (StreamWriter sw = File.CreateText(filePath))
+            if (File.Exists(filePath))
             {
-                sw.WriteLine("This is an example text file.");
+                Console.WriteLine("Erro a criar: Já existe um ficheiro com esse nome");
+            }
+            else
+            {
+                using (StreamWriter sw = File.CreateText(filePath))
+                {
+                    sw.WriteLine("This is an example text file.");
+                }
             }
         }
 
         private static void LerFicheiro()
         {
+
             string filePath = @"C:\Users\Utilizador\example.txt";
-            using (StreamReader sr = File.OpenText(filePath))
+            if (!File.Exists(filePath))
             {
-                string fileContents = sr.ReadToEnd();
-                Console.WriteLine(fileContents);
+                Console.WriteLine("Erro a Ler: O ficheiro não existe");
             }
+            else
+            {
+                using (StreamReader sr = File.OpenText(filePath))
+                {
+                    string fileContents = sr.ReadToEnd();
+                    Console.WriteLine(fileContents);
+                }
+            }
+           
         }
 
         private static void EscreverFicheiro()
         {
 
             string filePath = @"C:\Users\Utilizador\example.txt";
-            using (StreamWriter sw = File.AppendText(filePath))
+            if (!File.Exists(filePath))
             {
-                sw.WriteLine("This is another line added to the file.");
+                Console.WriteLine("Erro a Escrever: O ficheiro não existe");
             }
+            else
+            {
+                using (StreamWriter sw = File.AppendText(filePath))
+                {
+                    sw.WriteLine("This is another line added to the file.");
+                }
+            }
+            
 
 
 

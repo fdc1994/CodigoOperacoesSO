@@ -15,30 +15,73 @@ namespace CodigoOperacoesSO
             string dir = @"C:\Teste"; //Diretório
             string dir2 = @"C:\Teste5"; //Novo nome
             string dirDestino = @"C:\Teste3"; //Diretório de destino
-            string fich = @"C:\Teste\fich.txt"; //Ficheiro a ser verificado
+            string fich = @"fich2.txt"; //Ficheiro a ser verificado
             string dirOrigem = @"C:\Teste"; //Diretório de origem
-            VerificarSeDiretorioExiste(dir);
-            CriarDiretorio(dir);
-            VerificarSeDiretorioExiste(dir);
-            EliminarDiretorio(dir);
-            VerificarSeDiretorioExiste(dir);
-            MoverDiretorio(dir, dirDestino);
-            VerificarSeFicheiroExiste(fich);
-            CriarFicheiro(dir, fich);
-            EliminarFicheiro(fich);
-            DeslocarFicheiros(dirDestino, fich, dirOrigem);
-            CopiarFicheiros(dirDestino, fich, dirOrigem);
-            CopiarDiretorios(dirDestino, dirOrigem);
-            RenomearFicheiros(dir, fich);
-            RenomearDiretorios(dir, dir2);
-            String so = VerificarSO();
-            VerificarSoftwareInstalado();
-            VerificarDrives();
-            VerificarProcessadorEMemoria();
-            VerificarProcessos();
-            IniciarProcesso();
-            TerminarProcesso();
-            ObterCulturaSistema();
+            //VerificarSeDiretorioExiste(dir);
+            // CriarDiretorio(dir);
+            // VerificarSeDiretorioExiste(dir);
+            // EliminarDiretorio(dir);
+            // VerificarSeDiretorioExiste(dir);
+            // MoverDiretorio(dir, dirDestino);
+            // VerificarSeFicheiroExiste(fich);
+            // CriarFicheiro(dir, fich);
+            // EliminarFicheiro(fich);
+            // DeslocarFicheiros(dirDestino, fich, dirOrigem);
+            // CopiarFicheiros(dirDestino, fich, dirOrigem);
+            // CopiarDiretorios(dirDestino, dirOrigem);
+            //RenomearFicheiros(dir, fich);
+            //RenomearDiretorios(dir, dir2);
+            //String so = VerificarSO();
+            // VerificarSoftwareInstalado();
+            // VerificarDrives();
+            // VerificarProcessadorEMemoria();
+            // VerificarProcessos();
+            // IniciarProcesso();
+            // TerminarProcesso();
+            // ObterCulturaSistema();
+
+            CriarNovoFicheiro();
+            EscreverFicheiro();
+            LerFicheiro();
+            DeleteFile();
+
+        }
+
+        private static void DeleteFile()
+        {
+            string filePath = @"C:\Users\Utilizador\example.txt";
+            File.Delete(filePath);
+        }
+
+        private static void CriarNovoFicheiro()
+        {
+            string filePath = @"C:\Users\Utilizador\example.txt";
+            using (StreamWriter sw = File.CreateText(filePath))
+            {
+                sw.WriteLine("This is an example text file.");
+            }
+        }
+
+        private static void LerFicheiro()
+        {
+            string filePath = @"C:\Users\Utilizador\example.txt";
+            using (StreamReader sr = File.OpenText(filePath))
+            {
+                string fileContents = sr.ReadToEnd();
+                Console.WriteLine(fileContents);
+            }
+        }
+
+        private static void EscreverFicheiro()
+        {
+
+            string filePath = @"C:\Users\Utilizador\example.txt";
+            using (StreamWriter sw = File.AppendText(filePath))
+            {
+                sw.WriteLine("This is another line added to the file.");
+            }
+
+
 
         }
 

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,11 +42,94 @@ namespace CodigoOperacoesSO
             // TerminarProcesso();
             // ObterCulturaSistema();
 
-            CriarNovoFicheiro();
+           // CriarNovoFicheiro();
             EscreverFicheiro();
             LerFicheiro();
-            DeleteFile();
+            //DeleteFile();
+            //MoverFicheiro();
 
+            //CopiarFicheiroNovaLocalização();
+
+            //ApagarFicheiro();
+            VerificarSeFicheiroExiste();
+
+            VerificarSePastaExiste();
+
+            VerificarSeOfficeEstaInstalado();
+            VerificarHardware();
+
+        }
+
+        private static void VerificarHardware()
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
+
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                Console.WriteLine("CPU Name: " + obj["Name"]);
+                Console.WriteLine("Number of Cores: " + obj["NumberOfCores"]);
+            }
+
+            searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PhysicalMemory");
+
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                Console.WriteLine("Memory Capacity: " + obj["Capacity"]);
+                Console.WriteLine("Memory Speed: " + obj["Speed"]);
+            }
+            Console.ReadLine();
+        }
+
+        private static void VerificarSeOfficeEstaInstalado()
+        {
+            string softwareName = "Microsoft Office";
+            string uninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+            RegistryKey rk = Registry.LocalMachine.OpenSubKey(uninstallKey);
+
+            foreach (string subKeyName in rk.GetSubKeyNames())
+            {
+                RegistryKey subKey = rk.OpenSubKey(subKeyName);
+                string displayName = subKey.GetValue("DisplayName") as string;
+                if (displayName != null && displayName.Contains(softwareName))
+                {
+                    Console.WriteLine("Software found: " + displayName);
+                    Console.ReadLine();
+                }
+            }
+        }
+
+        private static void VerificarSePastaExiste()
+        {
+            string folderPath = @"C:\Users\Utilizador\example.txt";
+            bool folderExists = Directory.Exists(folderPath);
+            Console.WriteLine(folderExists);
+        }
+
+        private static void VerificarSeFicheiroExiste()
+        {
+            string filePath = @"C:\Users\Utilizador\example.txt";
+            bool fileExists = File.Exists(filePath);
+            Console.WriteLine(fileExists);
+        }
+
+        private static void ApagarFicheiro()
+        {
+            string folderPath = @"C:\Users\Utilizador\example.txt";
+            Directory.Delete(folderPath);
+        }
+
+        private static void CopiarFicheiroNovaLocalização()
+        {
+            string sourceFilePath = @"C:\Users\Utilizador\example.txt";
+            string destinationFilePath = @"C:\Users\Utilizador\desktop\exampleCopy.txt";
+            File.Copy(sourceFilePath, destinationFilePath);
+        }
+
+        private static void MoverFicheiro()
+        {
+            string sourceFilePath = @"C:\Users\Utilizador\example.txt";
+            string destinationFilePath = @"C:\Users\Utilizador\desktop\example.txt";
+            File.Move(sourceFilePath, destinationFilePath);
         }
 
         private static void DeleteFile()

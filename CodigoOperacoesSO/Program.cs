@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace CodigoOperacoesSO
 {
     internal class Program
     {
+
         static void Main(string[] args)
         {
             string dir = @"C:\Teste"; //Diretório
@@ -41,23 +43,44 @@ namespace CodigoOperacoesSO
             // IniciarProcesso();
             // TerminarProcesso();
             // ObterCulturaSistema();
-
-           // CriarNovoFicheiro();
-            EscreverFicheiro();
-            LerFicheiro();
+            // CriarNovoFicheiro();
+            // EscreverFicheiro();
+            // LerFicheiro();
             //DeleteFile();
             //MoverFicheiro();
-
             //CopiarFicheiroNovaLocalização();
-
             //ApagarFicheiro();
-            VerificarSeFicheiroExiste();
+            //VerificarSeFicheiroExiste();
+            //VerificarSePastaExiste();
 
-            VerificarSePastaExiste();
 
             VerificarSeOfficeEstaInstalado();
             VerificarHardware();
+            IniciarETerminarProcessoNotepad();
+            IniciarProcessoComPrivilegios();
 
+
+
+            //Mantém a consola aberta
+            Console.Read();
+        }
+
+      
+
+        private static void IniciarProcessoComPrivilegios()
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe");
+            startInfo.Verb = "runas"; // run as administrator
+            Process process = Process.Start(startInfo);
+
+            // Wait for the process to finish
+            process.WaitForExit();
+
+            // Kill the process if it is still running
+            if (!process.HasExited)
+            {
+                process.Kill();
+            }
         }
 
         private static void VerificarHardware()
@@ -75,9 +98,9 @@ namespace CodigoOperacoesSO
             foreach (ManagementObject obj in searcher.Get())
             {
                 Console.WriteLine("Memory Capacity: " + obj["Capacity"]);
+                
                 Console.WriteLine("Memory Speed: " + obj["Speed"]);
             }
-            Console.ReadLine();
         }
 
         private static void VerificarSeOfficeEstaInstalado()
@@ -93,7 +116,6 @@ namespace CodigoOperacoesSO
                 if (displayName != null && displayName.Contains(softwareName))
                 {
                     Console.WriteLine("Software found: " + displayName);
-                    Console.ReadLine();
                 }
             }
         }
@@ -180,13 +202,18 @@ namespace CodigoOperacoesSO
             Console.ReadLine();
         }
 
-        private static void TerminarProcesso()
+        private static void IniciarETerminarProcessoNotepad()
         {
-            //Apontador para todas as instâncias da aplicação Notepad (Bloco de Notas) 
-            Process[] lista = Process.GetProcessesByName("Notepad");
-            foreach (Process processo in lista)
+            ProcessStartInfo startInfo = new ProcessStartInfo("notepad.exe");
+            Process process = Process.Start(startInfo);
+
+            // Wait for the process to finish
+            process.WaitForExit();
+
+            // Kill the process if it is still running
+            if (!process.HasExited)
             {
-                processo.Kill(); //Fecho de todos os processes
+                process.Kill();
             }
         }
 
